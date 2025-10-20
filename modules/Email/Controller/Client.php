@@ -11,6 +11,8 @@
 
 namespace Box\Mod\Email\Controller;
 
+use FOSSBilling\Routing\RouteGroup;
+
 class Client implements \FOSSBilling\InjectionAwareInterface
 {
     protected ?\Pimple\Container $di = null;
@@ -27,23 +29,41 @@ class Client implements \FOSSBilling\InjectionAwareInterface
 
     public function register(\Box_App &$app)
     {
-        $app->get('/email', 'get_emails', [], static::class);
-        $app->get('/email/:id', 'get_email', ['id' => '[0-9]+'], static::class);
+        $dashboard = RouteGroup::dashboard($app);
+        $dashboard->get('/emails', 'get_emails', [], static::class);
+        $dashboard->get('/emails/:id', 'get_email', ['id' => '[0-9]+'], static::class);
+
+        $app->get('/email', 'legacy_redirect_to_dashboard_emails', [], static::class);
+        $app->get('/email/:id', 'legacy_redirect_to_dashboard_emails', ['id' => '[0-9]+'], static::class);
     }
 
     public function get_emails(\Box_App $app)
     {
         $this->di['is_client_logged'];
 
+        RouteGroup::ensureDashboardPath($app, 'emails', $this->di['request']->getPathInfo());
+
         return $app->render('mod_email_index');
     }
 
     public function get_email(\Box_App $app, $id)
     {
+        RouteGroup::ensureDashboardPath($app, 'emails/' . $id, $this->di['request']->getPathInfo());
+
         $api = $this->di['api_client'];
         $data = ['id' => $id];
         $email = $api->email_get($data);
 
         return $app->render('mod_email_email', ['email' => $email]);
+    }
+
+    public function legacy_redirect_to_dashboard_emails(\Box_App $app, $id = null): never
+    {
+        $suffix = 'emails';
+        if ($id !== null) {
+            $suffix .= '/' . $id;
+        }
+
+        $app->redirect(RouteGroup::path($suffix));
     }
 }

@@ -11,6 +11,8 @@
 
 namespace Box\Mod\Order\Controller;
 
+use FOSSBilling\Routing\RouteGroup;
+
 class Client implements \FOSSBilling\InjectionAwareInterface
 {
     protected ?\Pimple\Container $di = null;
@@ -28,10 +30,15 @@ class Client implements \FOSSBilling\InjectionAwareInterface
     public function register(\Box_App &$app)
     {
         $app->get('/order', 'get_products', [], static::class);
-        $app->get('/order/service', 'get_orders', [], static::class);
         $app->get('/order/:id', 'get_configure_product', ['id' => '[0-9]+'], static::class);
         $app->get('/order/:slug', 'get_configure_product_by_slug', ['slug' => '[a-z0-9-]+'], static::class);
-        $app->get('/order/service/manage/:id', 'get_order', ['id' => '[0-9]+'], static::class);
+
+        $dashboard = RouteGroup::dashboard($app);
+        $dashboard->get('/services', 'get_orders', [], static::class);
+        $dashboard->get('/services/manage/:id', 'get_order', ['id' => '[0-9]+'], static::class);
+
+        $app->get('/order/service', 'legacy_redirect_to_dashboard_services', [], static::class);
+        $app->get('/order/service/manage/:id', 'legacy_redirect_to_dashboard_service', ['id' => '[0-9]+'], static::class);
     }
 
     public function get_products(\Box_App $app)
@@ -67,11 +74,15 @@ class Client implements \FOSSBilling\InjectionAwareInterface
     {
         $this->di['is_client_logged'];
 
+        RouteGroup::ensureDashboardPath($app, 'services', $this->di['request']->getPathInfo());
+
         return $app->render('mod_order_list');
     }
 
     public function get_order(\Box_App $app, $id)
     {
+        RouteGroup::ensureDashboardPath($app, 'services/manage/' . $id, $this->di['request']->getPathInfo());
+
         $api = $this->di['api_client'];
         $data = [
             'id' => $id,
@@ -79,5 +90,15 @@ class Client implements \FOSSBilling\InjectionAwareInterface
         $order = $api->order_get($data);
 
         return $app->render('mod_order_manage', ['order' => $order]);
+    }
+
+    public function legacy_redirect_to_dashboard_services(\Box_App $app): never
+    {
+        $app->redirect(RouteGroup::path('services'));
+    }
+
+    public function legacy_redirect_to_dashboard_service(\Box_App $app, $id): never
+    {
+        $app->redirect(RouteGroup::path('services/manage/' . $id));
     }
 }

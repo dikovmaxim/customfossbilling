@@ -11,6 +11,8 @@
 
 namespace Box\Mod\Servicedownloadable\Controller;
 
+use FOSSBilling\Routing\RouteGroup;
+
 class Client implements \FOSSBilling\InjectionAwareInterface
 {
     protected ?\Pimple\Container $di = null;
@@ -27,6 +29,7 @@ class Client implements \FOSSBilling\InjectionAwareInterface
 
     public function register(\Box_App &$app)
     {
+        RouteGroup::dashboard($app)->get('/services/download/:id', 'get_download', ['id' => '[0-9]+'], static::class);
         $app->get('/servicedownloadable/get-file/:id', 'get_download', ['id' => '[0-9]+'], static::class);
     }
 

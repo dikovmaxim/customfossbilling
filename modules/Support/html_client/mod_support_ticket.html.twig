@@ -60,7 +60,7 @@
                             <tr>
                                 <td>{{ 'Related to'|trans }}</td>
                                 <td>
-                                    <a href="{{ 'order/service/manage'|link }}/{{ ticket.rel_id }}">{{ 'Service #'|trans }} {{ ticket.rel_id }}</a>
+                                    <a href="{{ dashboard_link('services/manage/' ~ ticket.rel_id) }}">{{ 'Service #'|trans }} {{ ticket.rel_id }}</a>
                                 </td>
                             </tr>
                         {% endif %}

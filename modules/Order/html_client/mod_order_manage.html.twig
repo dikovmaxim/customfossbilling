@@ -8,7 +8,7 @@
 
 {% block body_class %}order-manage{% endblock %}
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{{ 'order/service' | link}}">{{ 'Services'|trans }}</a></li>
+<li class="breadcrumb-item"><a href="{{ dashboard_link('services') }}">{{ 'Services'|trans }}</a></li>
 <li class="breadcrumb-item active" aria-current="page">{{ order.title }}</li>
 {% endblock %}
 
@@ -92,7 +92,7 @@
                             <tr>
                                 <td><label>{{ 'Active support tickets'|trans }}</label></td>
                                 <td>
-                                    <div class="num"><a href="{{ 'support'|link }}" class="redNum">{{ order.active_tickets }}</a></div>
+                                    <div class="num"><a href="{{ dashboard_link('support') }}" class="redNum">{{ order.active_tickets }}</a></div>
                                     {# <div class="num"><a href="{{ 'support'|link }}" class="greenNum">{{ order.active_tickets }}</a></div> #}
                                     {# <div class="num"><a href="{{ 'support'|link }}" class="bludNum">{{ order.active_tickets }}</a></div> #}
                                 </td>
@@ -155,7 +155,7 @@
                                         <span class="badge {% if addon.status == 'active' %}bg-success{% elseif addon.status == 'pending_setup' %}bg-warning{% endif %}">{{ mf.status_name(addon.status) }}</span>
                                     </td>
                                     <td class="actions">
-                                        <a class="btn btn-outline-primary btn-sm" href="{{ '/order/service/manage'|link }}/{{ addon.id }}">{{ 'Manage'|trans }}</a>
+                                        <a class="btn btn-outline-primary btn-sm" href="{{ dashboard_link('services/manage/' ~ addon.id) }}">{{ 'Manage'|trans }}</a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -333,7 +333,7 @@
                         'client/invoice/renewal_invoice',
                         {order_id: {{ order.id }}, CSRFToken: "{{ CSRFToken }}"},
                         function (result) {
-                            bb.redirect("{{ 'invoice'|link }}" + '/' + result);
+                            bb.redirect("{{ dashboard_link('invoices') }}" + '/' + result);
                         }
                     );
                 }

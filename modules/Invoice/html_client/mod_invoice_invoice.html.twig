@@ -9,7 +9,7 @@
 {% block body_class %}invoice-invoice{% endblock %}
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item"><a href="{{ '/invoice'|link }}">{{ 'Invoices'|trans }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ dashboard_link('invoices') }}">{{ 'Invoices'|trans }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">#{{ nr }}</li>
 {% endblock %}
 
@@ -30,7 +30,7 @@
                         <div class="d-flex gap-3">
                             {% for gtw in guest.invoice_gateways %}
                                 {% if invoice.currency in gtw.accepted_currencies %}
-                                {% set banklink = 'invoice/banklink'|link %}
+                                {% set banklink = dashboard_link('invoices/banklink') %}
                                 <div class="invoice-gateway rounded-2 p-2">
                                     <input type="radio" class="btn-check border-0" name="gateway_id" gateway_id="{{ gtw.id }}" id="{{ gtw.id }}" autocomplete="off">
                                     <label class="btn" for="{{ gtw.id }}"
@@ -205,7 +205,7 @@
                                     <td>{{ i+1 }}</td>
                                     <td>
                                         {% if item.order_id %}
-                                            <a href="{{ '/order/service'|link }}/manage/{{ item.order_id }}">{{ item.title }}</a>
+                                            <a href="{{ dashboard_link('services/manage/' ~ item.order_id) }}">{{ item.title }}</a>
                                         {% else %}
                                             {{ item.title }}
                                         {% endif %}
@@ -283,7 +283,7 @@
 
     function paymentPrompt(id, supportsSubscription, title){
         invoiceHash = "{{ invoice.hash }}";
-        backLink    = "{{ 'invoice/banklink'|link }}";
+        backLink    = "{{ dashboard_link('invoices/banklink') }}";
         paymentLink = new URL(backLink.concat('/', invoiceHash, '/', id));
         invoiceSubscribable = {{ invoice.subscribable ? 'true' : 'false' }};
 

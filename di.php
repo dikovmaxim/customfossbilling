@@ -11,6 +11,7 @@
 
 use FOSSBilling\Config;
 use FOSSBilling\Environment;
+use FOSSBilling\Routing\RouteGroup;
 use Lcharette\WebpackEncoreTwig\EntrypointsTwigExtension;
 use Lcharette\WebpackEncoreTwig\JsonManifest;
 use Lcharette\WebpackEncoreTwig\TagRenderer;
@@ -24,6 +25,7 @@ use Twig\Extension\CoreExtension;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\StringLoaderExtension;
 use Twig\Extra\Intl\IntlExtension;
+use Twig\TwigFunction;
 
 $di = new Pimple\Container();
 
@@ -314,6 +316,15 @@ $di['twig'] = $di->factory(function () use ($di) {
     }
 
     $twig->addGlobal('CSRFToken', $token);
+    $twig->addGlobal('current_path', $di['request']->getPathInfo());
+    $twig->addGlobal('dashboard_prefix', RouteGroup::prefix() ?: '/');
+    $twig->addGlobal('dashboard_home', RouteGroup::path());
+    $twig->addGlobal('is_dashboard_request', RouteGroup::isDashboardPath($di['request']->getPathInfo()));
+    $twig->addFunction(new TwigFunction('dashboard_link', function (?string $suffix = null, array $params = []) use ($di) {
+        $path = trim(RouteGroup::path($suffix ?? ''), '/');
+
+        return $di['url']->link($path, $params);
+    }));
     $twig->addGlobal('request', $_GET);
     $twig->addGlobal('guest', $di['api_guest']);
     $twig->addGlobal('FOSSBillingVersion', FOSSBilling\Version::VERSION);
