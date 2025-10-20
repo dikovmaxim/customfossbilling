@@ -11,6 +11,8 @@
 
 namespace Box\Mod\Invoice\Controller;
 
+use FOSSBilling\Routing\RouteGroup;
+
 class Client implements \FOSSBilling\InjectionAwareInterface
 {
     protected ?\Pimple\Container $di = null;
@@ -27,8 +29,20 @@ class Client implements \FOSSBilling\InjectionAwareInterface
 
     public function register(\Box_App &$app)
     {
-        $app->get('/invoice', 'get_invoices', [], static::class);
-        $app->post('/invoice', 'get_invoices', [], static::class);
+        $dashboard = RouteGroup::dashboard($app);
+        $dashboard->get('/invoices', 'get_invoices', [], static::class);
+        $dashboard->post('/invoices', 'get_invoices', [], static::class);
+        $dashboard->get('/invoices/:hash', 'get_invoice', ['hash' => '[a-z0-9]+'], static::class);
+        $dashboard->post('/invoices/:hash', 'get_invoice', ['hash' => '[a-z0-9]+'], static::class);
+        $dashboard->get('/invoices/print/:hash', 'get_invoice_print', ['hash' => '[a-z0-9]+'], static::class);
+        $dashboard->post('/invoices/print/:hash', 'get_invoice_print', ['hash' => '[a-z0-9]+'], static::class);
+        $dashboard->get('/invoices/banklink/:hash/:id', 'get_banklink', ['id' => '[0-9]+', 'hash' => '[a-z0-9]+'], static::class);
+        $dashboard->get('/invoices/thank-you/:hash', 'get_thankyoupage', ['hash' => '[a-z0-9]+'], static::class);
+        $dashboard->post('/invoices/thank-you/:hash', 'get_thankyoupage', ['hash' => '[a-z0-9]+'], static::class);
+        $dashboard->get('/invoices/pdf/:hash', 'get_pdf', ['hash' => '[a-z0-9]+'], static::class);
+
+        $app->get('/invoice', 'legacy_redirect_to_dashboard_invoices', [], static::class);
+        $app->post('/invoice', 'legacy_redirect_to_dashboard_invoices', [], static::class);
         $app->get('/invoice/:hash', 'get_invoice', ['hash' => '[a-z0-9]+'], static::class);
         $app->post('/invoice/:hash', 'get_invoice', ['hash' => '[a-z0-9]+'], static::class);
         $app->get('/invoice/print/:hash', 'get_invoice_print', ['hash' => '[a-z0-9]+'], static::class);
@@ -43,7 +57,14 @@ class Client implements \FOSSBilling\InjectionAwareInterface
     {
         $this->di['is_client_logged'];
 
+        RouteGroup::ensureDashboardPath($app, 'invoices', $this->di['request']->getPathInfo());
+
         return $app->render('mod_invoice_index');
+    }
+
+    public function legacy_redirect_to_dashboard_invoices(\Box_App $app): never
+    {
+        $app->redirect(RouteGroup::path('invoices'));
     }
 
     public function get_invoice(\Box_App $app, $hash)

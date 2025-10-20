@@ -11,6 +11,8 @@
 
 namespace Box\Mod\Dashboard\Controller;
 
+use FOSSBilling\Routing\RouteGroup;
+
 class Client implements \FOSSBilling\InjectionAwareInterface
 {
     protected ?\Pimple\Container $di = null;
@@ -27,7 +29,7 @@ class Client implements \FOSSBilling\InjectionAwareInterface
 
     public function register(\Box_App &$app)
     {
-        $app->get('/dashboard', 'get_dashboard_index', [], static::class);
+        RouteGroup::dashboard($app)->get('/', 'get_dashboard_index', [], static::class);
     }
 
     public function get_dashboard_index(\Box_App $app)

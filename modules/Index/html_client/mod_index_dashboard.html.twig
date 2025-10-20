@@ -51,7 +51,7 @@
                             <span class="h6 m-0 pt-1">{{ 'Profile'|trans }}</span>
                             <div class="py-2">
                                 <a class="btn btn-sm btn-dark"
-                                   href="{{ 'client/profile'|link }}">{{ 'Update'|trans }}</a>
+                                   href="{{ dashboard_link('account/profile') }}">{{ 'Update'|trans }}</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -73,7 +73,7 @@
                             <span class="h6 m-0 pt-1">{{ 'Invoices'|trans }}</span>
                             <div class="py-2">
                                 <a class="btn btn-sm btn-dark"
-                                   href="{{ 'invoice'|link }}">{{ 'All Invoices'|trans }}</a>
+                                   href="{{ dashboard_link('invoices') }}">{{ 'All Invoices'|trans }}</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -99,7 +99,7 @@
                                 <a class="btn btn-sm btn-primary order-button"
                                    href="{{ 'order'|link }}">{{ 'New order'|trans }}</a>
                                 <a class="btn btn-sm btn-dark"
-                                   href="{{ 'order/service'|link }}">{{ 'All orders'|trans }}</a>
+                                   href="{{ dashboard_link('services') }}">{{ 'All orders'|trans }}</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -121,8 +121,8 @@
                             <span class="h6 m-0 pt-1">{{ 'Tickets'|trans }}</span>
                             <div class="py-2">
                                 <a class="btn btn-sm btn-primary"
-                                   href="{{ 'support'|link({ 'ticket': 1 }) }}">{{ 'New ticket'|trans }}</a>
-                                <a class="btn btn-sm btn-dark" href="{{ 'support'|link }}">{{ 'All tickets'|trans }}</a>
+                                   href="{{ dashboard_link('support') }}?ticket=1">{{ 'New ticket'|trans }}</a>
+                                <a class="btn btn-sm btn-dark" href="{{ dashboard_link('support') }}">{{ 'All tickets'|trans }}</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -147,7 +147,7 @@
                             {% if client.order_get_list({ "per_page": 5, "page": request.page, "hide_addons": 1 }).list %}
                                 <div class="list-group list-group-flush">
                                     {% for i, order in client.order_get_list({ "per_page": 5, "page": request.page, "hide_addons": 1 }).list %}
-                                        <a href="{{ 'order/service/manage'|link }}/{{ order.id }}"
+                                        <a href="{{ dashboard_link('services/manage/' ~ order.id) }}"
                                            class="list-group-item d-flex justify-content-between align-items-center" aria-current="true">
                                             <div>
                                                 <div>

@@ -11,6 +11,8 @@
 
 namespace Box\Mod\Client\Controller;
 
+use FOSSBilling\Routing\RouteGroup;
+
 class Client implements \FOSSBilling\InjectionAwareInterface
 {
     protected ?\Pimple\Container $di = null;
@@ -28,15 +30,22 @@ class Client implements \FOSSBilling\InjectionAwareInterface
     public function register(\Box_App &$app)
     {
         $app->get('/client/reset-password-confirm/:hash', 'get_reset_password_confirm', ['hash' => '[a-z0-9]+'], static::class);
-        $app->get('/client', 'get_client_index', [], static::class);
-        $app->get('/client/logout', 'get_client_logout', [], static::class);
-        $app->get('/client/:page', 'get_client_page', ['page' => '[a-z0-9-]+'], static::class);
+        $dashboard = RouteGroup::dashboard($app);
+        $dashboard->get('/account', 'get_client_index', [], static::class);
+        $dashboard->get('/account/logout', 'get_client_logout', [], static::class);
+        $dashboard->get('/account/:page', 'get_client_page', ['page' => '[a-z0-9-]+'], static::class);
+
+        $app->get('/client', 'legacy_redirect_to_dashboard_account', [], static::class);
+        $app->get('/client/logout', 'legacy_redirect_to_dashboard_logout', [], static::class);
+        $app->get('/client/:page', 'legacy_redirect_to_dashboard_account_page', ['page' => '[a-z0-9-]+'], static::class);
         $app->get('/client/confirm-email/:hash', 'get_client_confirmation', ['page' => '[a-z0-9-]+'], static::class);
     }
 
     public function get_client_index(\Box_App $app)
     {
         $this->di['is_client_logged'];
+
+        RouteGroup::ensureDashboardPath($app, 'account', $this->di['request']->getPathInfo());
 
         return $app->render('mod_client_index');
     }
@@ -60,6 +69,8 @@ class Client implements \FOSSBilling\InjectionAwareInterface
     public function get_client_page(\Box_App $app, $page)
     {
         $this->di['is_client_logged'];
+
+        RouteGroup::ensureDashboardPath($app, 'account/' . $page, $this->di['request']->getPathInfo());
         $template = 'mod_client_' . $page;
 
         return $app->render($template);
@@ -81,5 +92,20 @@ class Client implements \FOSSBilling\InjectionAwareInterface
         } else {
             $app->redirect('/');
         }
+    }
+
+    public function legacy_redirect_to_dashboard_account(\Box_App $app): never
+    {
+        $app->redirect(RouteGroup::path('account'));
+    }
+
+    public function legacy_redirect_to_dashboard_account_page(\Box_App $app, $page): never
+    {
+        $app->redirect(RouteGroup::path('account/' . $page));
+    }
+
+    public function legacy_redirect_to_dashboard_logout(\Box_App $app): never
+    {
+        $app->redirect(RouteGroup::path('account/logout'));
     }
 }

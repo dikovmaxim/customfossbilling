@@ -38,7 +38,7 @@
                             <tbody>
                             {% for i, order in orders.list %}
                                 <tr>
-                                    <td><a href="{{ '/order/service/manage'|link }}/{{ order.id }}">#{{ order.id }}</a></td>
+                                    <td><a href="{{ dashboard_link('services/manage/' ~ order.id) }}">#{{ order.id }}</a></td>
                                     <td>
                                         <span>{{ order.title }}</span>
                                     </td>
@@ -50,7 +50,7 @@
                                     </td>
                                     <td class="actions">
                                         <a class="btn btn-sm btn-outline-primary"
-                                           href="{{ '/order/service/manage'|link }}/{{ order.id }}">Manage</a>
+                                           href="{{ dashboard_link('services/manage/' ~ order.id) }}">Manage</a>
                                     </td>
                                 </tr>
                             {% endfor %}

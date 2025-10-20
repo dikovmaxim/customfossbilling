@@ -2,7 +2,7 @@
 <html lang="en" data-bs-theme="{{ settings.theme|default('light') }}">
 <head>
     <meta charset="utf-8">
-   <title>{{ settings.meta_title_prefix }} {% block meta_title %}{% endblock %} {{ settings.meta_title_suffix }}</title>
+    <title>{{ settings.meta_title_prefix }} {% block meta_title %}{% endblock %} {{ settings.meta_title_suffix }}</title>
 
     <meta property="bb:url" content="{{ constant('SYSTEM_URL') }}">
     <meta property="bb:client_area" content="{{ '/'|link }}">
@@ -16,9 +16,175 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {% block opengraph %}{% endblock %}
+
     <link rel='stylesheet' type='text/css' href="{{ 'css/font-awesome.css' | asset_url }}">
-    {{ encore_entry_link_tags('huraga') }}
     <link rel="shortcut icon" href="{{ guest.system_company.favicon_url }}">
+    {{ encore_entry_link_tags('huraga') }}
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-slate-50 text-slate-900;
+            }
+            html[data-bs-theme='dark'] body {
+                @apply bg-slate-900 text-slate-100;
+            }
+        }
+        @layer components {
+            .card {
+                @apply bg-white shadow-sm border border-slate-200 rounded-2xl overflow-hidden;
+            }
+            html[data-bs-theme='dark'] .card {
+                @apply bg-slate-800 border-slate-700;
+            }
+            .card-header {
+                @apply border-b border-slate-200 bg-slate-50 px-6 py-4 text-base font-semibold text-slate-800;
+            }
+            html[data-bs-theme='dark'] .card-header {
+                @apply border-slate-700 bg-slate-800 text-slate-100;
+            }
+            .card-body {
+                @apply px-6 py-4 space-y-4 text-sm;
+            }
+            .card-footer {
+                @apply border-t border-slate-200 bg-slate-50 px-6 py-4;
+            }
+            html[data-bs-theme='dark'] .card-footer {
+                @apply border-slate-700 bg-slate-800;
+            }
+            .btn {
+                @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-150;
+            }
+            .btn-primary {
+                @apply bg-primary-600 text-white hover:bg-primary-700;
+            }
+            .btn-outline-primary {
+                @apply border border-primary-600 text-primary-600 hover:bg-primary-50;
+            }
+            .btn-secondary {
+                @apply bg-slate-600 text-white hover:bg-slate-700;
+            }
+            .btn-outline-secondary {
+                @apply border border-slate-400 text-slate-700 hover:bg-slate-100;
+            }
+            .btn-success {
+                @apply bg-emerald-600 text-white hover:bg-emerald-700;
+            }
+            .btn-danger {
+                @apply bg-rose-600 text-white hover:bg-rose-700;
+            }
+            .btn-dark {
+                @apply bg-slate-900 text-white hover:bg-black;
+            }
+            .btn-light {
+                @apply bg-white text-slate-700 border border-slate-200 hover:bg-slate-50;
+            }
+            .form-control,
+            .form-select {
+                @apply block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200;
+            }
+            html[data-bs-theme='dark'] .form-control,
+            html[data-bs-theme='dark'] .form-select {
+                @apply border-slate-700 bg-slate-800 text-slate-100 focus:border-primary-400 focus:ring-primary-700;
+            }
+            .input-group {
+                @apply flex rounded-lg shadow-sm;
+            }
+            .input-group > * {
+                @apply border border-slate-300 first:rounded-l-lg last:rounded-r-lg;
+            }
+            .breadcrumb {
+                @apply flex flex-wrap items-center gap-2 text-sm text-slate-500;
+            }
+            .breadcrumb-item {
+                @apply flex items-center gap-2;
+            }
+            .breadcrumb-item + .breadcrumb-item::before {
+                content: '/';
+                @apply text-slate-300;
+            }
+            .table {
+                @apply min-w-full divide-y divide-slate-200 text-left text-sm;
+            }
+            .table thead {
+                @apply bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500;
+            }
+            .table tbody tr {
+                @apply border-b border-slate-100;
+            }
+            .table tbody tr:hover {
+                @apply bg-slate-50;
+            }
+            html[data-bs-theme='dark'] .table thead {
+                @apply bg-slate-800 text-slate-300;
+            }
+            html[data-bs-theme='dark'] .table tbody tr {
+                @apply border-slate-800;
+            }
+            .table td,
+            .table th {
+                @apply px-4 py-3;
+            }
+            .alert {
+                @apply rounded-lg border px-4 py-3 text-sm;
+            }
+            .alert-success {
+                @apply border-emerald-200 bg-emerald-50 text-emerald-700;
+            }
+            .alert-danger {
+                @apply border-rose-200 bg-rose-50 text-rose-700;
+            }
+            .nav-link {
+                @apply inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900;
+            }
+            .nav-link.active {
+                @apply bg-primary-50 text-primary-600;
+            }
+            .dropdown-menu {
+                @apply z-40 mt-2 w-48 rounded-xl border border-slate-200 bg-white p-2 shadow-xl;
+            }
+            .dropdown-item {
+                @apply block rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900;
+            }
+            .rounded-circle {
+                @apply rounded-full;
+            }
+            .img-fluid {
+                @apply h-auto max-w-full;
+            }
+            .content-block {
+                @apply space-y-6;
+            }
+            .link-muted {
+                @apply text-slate-500 hover:text-slate-700;
+            }
+            .toast-container {
+                @apply space-y-3;
+            }
+        }
+    </style>
 
     {{ "Api/API.js" | library_url | script_tag }}
     {{ encore_entry_script_tags('huraga') }}
@@ -28,147 +194,120 @@
     {% block head %}{% endblock %}
     {% block js %}{% endblock %}
 </head>
-
-<body class="{% block body_class %}{% endblock %}">
-
+<body class="min-h-screen {% block body_class %}{% endblock %}">
 {% block body %}
-{% if not client and settings.require_login %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const publicPaths = [
-                '/news',
-                '/tos',
-                '/privacy-policy'
-            ];
-            const currentPath = window.location.pathname;
+    {% if not client and settings.require_login %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const publicPaths = [
+                    '/news',
+                    '/tos',
+                    '/privacy-policy'
+                ];
+                const currentPath = window.location.pathname;
+                const isAllowed = publicPaths.some(path => currentPath.startsWith(path));
+                if (!isAllowed) {
+                    window.location.href = '{{ "login"|link }}';
+                }
+            });
+        </script>
+    {% endif %}
 
-            const isAllowed = publicPaths.some(path => currentPath.startsWith(path));
-            if (!isAllowed) {
-                window.location.href = '{{ "login"|link }}';
-            }
-        });
-    </script>
-{% endif %}
+    {% if client %}
+        {% set profile = client.profile_get %}
+    {% endif %}
+    {% set company = guest.system_company %}
+    {% if settings.theme == 'dark' %}
+        {% set logo_url = company.logo_url_dark %}
+    {% else %}
+        {% set logo_url = company.logo_url %}
+    {% endif %}
 
-{% if client %}
-    {% set profile = client.profile_get %}
-{% endif %}
-{% set company = guest.system_company %}
+    <div class="flex min-h-screen flex-col">
+        <header class="border-b border-slate-200 bg-white shadow-sm">
+            <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-4 py-4">
+                <div class="flex items-center gap-4">
+                    {% if logo_url and settings.show_company_logo %}
+                        <a class="flex items-center gap-3 text-lg font-semibold" href="{{ '/'|link }}">
+                            <img class="h-10 w-auto" src="{{ logo_url }}" alt="{{ company.name }}" title="{{ company.name }}">
+                            <span class="sr-only">{{ company.name }}</span>
+                        </a>
+                    {% else %}
+                        <a class="text-lg font-semibold text-slate-900" href="{{ '/'|link }}">{{ company.name }}</a>
+                    {% endif %}
+                    {% if settings.side_menu_dashboard and client %}
+                        <a class="hidden text-sm font-medium text-slate-500 hover:text-slate-900 md:inline-flex" href="{{ dashboard_link() }}">{{ 'Dashboard'|trans }}</a>
+                    {% endif %}
+                </div>
+                <div class="flex items-center gap-4">
+                    {% set languages = guest.extension_languages(true) %}
+                    {% if languages|length > 1 %}
+                        <select name="lang" class="form-select hidden md:block w-40 js-language-selector">
+                            {% for lang in languages %}
+                                <option value="{{ lang.locale }}">{{ lang.title }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
 
-{% if settings.theme == 'dark' %}
-    {% set logo_url =  company.logo_url_dark %}
-{% else %}
-    {% set logo_url =  company.logo_url %}
-{% endif %}
-<div class="container">
-    <header>
-        <nav class="navbar navbar-expand-md py-4">
-            <div class="container-fluid">
-                {% if logo_url and settings.show_company_logo %}
-                    <a class="navbar-brand" href="{{ '/'|link }}">
-                        <img class="d-none d-sm-block" src="{{ logo_url }}" alt="{{ company.name }}" height="45px"
-                             title="{{ company.name }}">
-                        <span class="d-sm-none">{{ company.name }}</span>
-                    </a>
-                {% else %}
-                    <a class="navbar-brand" href="{{ '/'|link }}">
-                        <span>{{ company.name }}</span>
-                    </a>
-                {% endif %}
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="{{ 'Toggle navigation'|trans }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <div class="navbar-nav me-auto mb-2 mb-lg-0 w-100 d-flex justify-content-end">
-
-
-                        {% set languages = guest.extension_languages(true) %}
-                        {% if languages|length > 1 %}
-                            <li class="nav-item">
-                                <select name="lang" class="form-select js-language-selector">
-                                    {% for lang in languages %}
-                                        <option value="{{ lang.locale }}" data-custom-properties="&lt;span class=&quot;fi fi-{{ lang.locale|split('_')[1]|lower }}&quot;&gt;&lt;/span&gt;">&nbsp;{{ lang.title }}</option>
-                                    {% endfor %}
-                                </select>
-                            </li>
-                        {% endif %}
-
-                        {% if settings.top_menu_dashboard %}
-                            <li class="nav-item d-none d-md-block">
-                                <a class="nav-link" href="{{ ''|link }}">{{ 'Dashboard'|trans }}</a>
-                            </li>
-                        {% endif %}
-
-                        {% if settings.top_menu_order %}
-                            <li class="nav-item d-none d-md-block">
-                                <a class="nav-link" href="{{ '/order'|link }}">{{ 'Order'|trans }}</a>
-                            </li>
-                        {% endif %}
-
-                        {% if settings.top_menu_profile %}
-                            <li class="nav-item d-none d-md-block">
-                                {% if not client %}
-                                    <a class="nav-link" href="{{ 'login'|link }}">{{ 'Login'|trans }}</a>
-                                {% endif %}
-                            </li>
-                        {% endif %}
-
-                        {% if settings.top_menu_signout %}
-                            <li class="nav-item d-none d-md-block">
-                                {% if client %}
-                                    <div class="dropdown">
-                                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <img class="img-fluid rounded-circle" alt="{{ profile.first_name }} {{ profile.last_name }} gravatar" src="{{ profile.email|gravatar(60) }}" height="25px" width="25px">
-                                            {% if profile.company %}
-                                                <span>{{ profile.first_name }} {{ profile.last_name }} ({{ profile.company }})</span>
-                                            {% else %}
-                                                <span>{{ profile.first_name }} {{ profile.last_name }}</span>
-                                            {% endif %}
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item"
-                                                   href="{{ 'client/profile'|link }}">{{ 'Profile'|trans }}</a></li>
-                                            <li><a class="dropdown-item"
-                                                   href="{{ 'client/logout'|link }}">{{ 'Sign out'|trans }}</a></li>
-                                        </ul>
-                                    </div>
-                                {% else %}
-                                    <a class="ms-2 btn btn-outline-primary d-none d-md-block"
-                                       href="{{ 'signup'|link }}">{{ 'Register'|trans }}</a>
-                                {% endif %}
-                            </li>
-                        {% endif %}
-
-                        <div class="d-md-none">
-                            {{ include('mobile_menu.html.twig') }}
+                    {% if client %}
+                        <div class="hidden items-center gap-3 md:flex">
+                            <span class="text-sm text-slate-500">{{ 'Signed in as'|trans }}</span>
+                            <a class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-sm font-medium text-slate-700 hover:border-primary-500 hover:text-primary-600" href="{{ dashboard_link('account/profile') }}">
+                                <img class="h-8 w-8 rounded-full" alt="{{ profile.first_name }} {{ profile.last_name }} gravatar" src="{{ profile.email|gravatar(60) }}">
+                                <span>{{ profile.first_name }} {{ profile.last_name }}</span>
+                            </a>
+                            <a class="btn btn-outline-secondary" href="{{ dashboard_link('account/logout') }}">{{ 'Sign out'|trans }}</a>
                         </div>
+                    {% else %}
+                        <div class="hidden items-center gap-2 md:flex">
+                            <a class="btn btn-outline-secondary" href="{{ 'login'|link }}">{{ 'Login'|trans }}</a>
+                            <a class="btn btn-primary" href="{{ 'signup'|link }}">{{ 'Register'|trans }}</a>
+                        </div>
+                    {% endif %}
+
+                    <div class="md:hidden">
+                        <details class="group relative">
+                            <summary class="flex cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-600 hover:border-primary-500 hover:text-primary-600">
+                                <span class="sr-only">{{ 'Open menu'|trans }}</span>
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                            </summary>
+                            <div class="absolute right-0 mt-2 w-72 origin-top-right rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl">
+                                {% if languages|length > 1 %}
+                                    <div class="mb-4">
+                                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">{{ 'Language'|trans }}</label>
+                                        <select name="lang" class="form-select w-full js-language-selector">
+                                            {% for lang in languages %}
+                                                <option value="{{ lang.locale }}">{{ lang.title }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endif %}
+                                {{ include('mobile_menu.html.twig') }}
+                            </div>
+                        </details>
                     </div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <div class="row">
-        {% if client or not settings.hide_menu %}
-            <div class="col-3 d-none d-md-block">
-                {{ include('partial_menu.html.twig') }}
-            </div>
-        {% endif %}
-            <div class="col-12 col-md-9" {% if not client and settings.hide_menu %} style="margin-left: auto; margin-right: auto;" {% endif %}>
-                <div id="wrapper">
-                    <section role="main">
+        </header>
+
+        <div class="flex-1">
+            {% if is_dashboard_request and client %}
+                <div class="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-8 px-4 py-8 lg:flex-row">
+                    <aside class="w-full lg:w-72">
+                        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                            {{ include('partial_menu.html.twig') }}
+                        </div>
+                    </aside>
+                    <main class="flex-1">
                         {% block content_before %}{% endblock %}
-                        <div class="content-block" role="main">
+                        <div class="content-block rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                             {% if settings.show_breadcrumb %}
                                 {% block breadcrumbs %}
-                                    <nav aria-label="{{ 'breadcrumb'|trans }}">
-                                        <ol class="breadcrumb d-none d-md-flex">
-                                            <li class="breadcrumb-item"><a href="{{ '/'|link }}">{{ 'Home'|trans }}</a>
-                                            </li>
+                                    <nav class="mb-4" aria-label="{{ 'breadcrumb'|trans }}">
+                                        <ol class="breadcrumb">
+                                            <li class="breadcrumb-item"><a class="link-muted" href="{{ '/'|link }}">{{ 'Home'|trans }}</a></li>
                                             {% block breadcrumb %}
-                                                <li class="active breadcrumb-item">{{ 'Dashboard'|trans }}</li>
+                                                <li class="breadcrumb-item text-slate-700">{{ 'Dashboard'|trans }}</li>
                                             {% endblock %}
                                         </ol>
                                     </nav>
@@ -176,93 +315,77 @@
                             {% endif %}
 
                             {% block content %}{% endblock %}
-
                             {{ include('partial_message.html.twig') }}
-
                             {% block content_after %}{% endblock %}
                         </div>
-                    </section>
-                    <div id="push"></div>
+                    </main>
                 </div>
-
-                {% if settings.footer_enabled %}
-                    <footer id="footer" class="small text-muted mt-2 mb-3">
-                        <div class="d-flex flex-column">
-                            <div class="d-flex justify-content-center">
-                                <span>&copy; {{ now|format_date(pattern='yyyy') }} {{ settings.footer_signature | default(company.signature) }}
-                                    {% if company.bank_info_pagebottom == 1 %}
-                                        <br/>
-                                        <b>{{'Payment Information'|trans}}</b> - {{'Bank Name'|trans}}: {{ company.bank_name }} | {{'BIC / SWIFT Code'|trans}}: {{ company.bic }} | {{'Account Number'|trans}}: {{ company.account_number }}
-                                    {% endif %}
-                                </span>
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                {% if settings.footer_link_1_enabled %}
-                                    {% if 'http://' in settings.footer_link_1_page or  'https://' in settings.footer_link_1_page %}
-                                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                           href="{{ settings.footer_link_1_page }}">{{ settings.footer_link_1_title }}</a>
-                                    {% else %}
-                                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                           href="{{ settings.footer_link_1_page | link }}">{{ settings.footer_link_1_title }}</a>
-                                    {% endif %}
-                                {% endif %}
-                                {% if settings.footer_link_2_enabled %}
-                                    &nbsp;&#x2022;&nbsp;
-                                    {% if 'http://' in settings.footer_link_2_page or  'https://' in settings.footer_link_2_page %}
-                                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                           href="{{ settings.footer_link_2_page }}">{{ settings.footer_link_2_title }}</a>
-                                    {% else %}
-                                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                           href="{{ settings.footer_link_2_page | link }}">{{ settings.footer_link_2_title }}</a>
-                                    {% endif %}
-                                {% endif %}
-                                {% if settings.footer_link_3_enabled %}
-                                    &nbsp;&#x2022;&nbsp;
-                                    {% if 'http://' in settings.footer_link_3_page or  'https://' in settings.footer_link_3_page %}
-                                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                           href="{{ settings.footer_link_3_page }}">{{ settings.footer_link_3_title }}</a>
-                                    {% else %}
-                                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                           href="{{ settings.footer_link_3_page | link }}">{{ settings.footer_link_3_title }}</a>
-                                    {% endif %}
-                                {% endif %}
-                                {% if settings.footer_link_4_enabled %}
-                                    &nbsp;&#x2022;&nbsp;
-                                    {% if 'http://' in settings.footer_link_4_page or  'https://' in settings.footer_link_4_page %}
-                                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                           href="{{ settings.footer_link_4_page }}">{{ settings.footer_link_4_title }}</a>
-                                    {% else %}
-                                        <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                           href="{{ settings.footer_link_4_page | link }}">{{ settings.footer_link_4_title }}</a>
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-                            {% if guest.extension_is_on({"mod":'branding'}) %}
-                                <div class="d-flex justify-content-center">
-                                    <span>{{ 'Powered by the'|trans }}&nbsp;</span>
-                                    <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                        href="https://fossbilling.org" title="Billing Software"
-                                       target="_blank">{{ 'FOSSBilling Community'|trans }}</a>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </footer>
-                {% endif %}
-            </div>
+            {% else %}
+                <main class="mx-auto w-full max-w-5xl px-4 py-10">
+                    {% block content_before %}{% endblock %}
+                    <div class="content-block">
+                        {% if settings.show_breadcrumb %}
+                            {% block breadcrumbs %}{% endblock %}
+                        {% endif %}
+                        {% block content %}{% endblock %}
+                        {{ include('partial_message.html.twig') }}
+                        {% block content_after %}{% endblock %}
+                    </div>
+                </main>
+            {% endif %}
         </div>
+
+        {% if settings.footer_enabled %}
+            <footer class="border-t border-slate-200 bg-white py-8">
+                <div class="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 text-sm text-slate-500">
+                    <div class="text-center">
+                        <span>&copy; {{ now|format_date(pattern='yyyy') }} {{ settings.footer_signature | default(company.signature) }}
+                            {% if company.bank_info_pagebottom == 1 %}
+                                <br>
+                                <strong>{{'Payment Information'|trans}}</strong> - {{'Bank Name'|trans}}: {{ company.bank_name }} | {{'BIC / SWIFT Code'|trans}}: {{ company.bic }} | {{'Account Number'|trans}}: {{ company.account_number }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-center gap-3">
+                        {% if settings.footer_link_1_enabled %}
+                            <a class="text-slate-500 hover:text-primary-600" href="{{ settings.footer_link_1_page starts with 'http' ? settings.footer_link_1_page : settings.footer_link_1_page|link }}">{{ settings.footer_link_1_title }}</a>
+                        {% endif %}
+                        {% if settings.footer_link_2_enabled %}
+                            <span>&bull;</span>
+                            <a class="text-slate-500 hover:text-primary-600" href="{{ settings.footer_link_2_page starts with 'http' ? settings.footer_link_2_page : settings.footer_link_2_page|link }}">{{ settings.footer_link_2_title }}</a>
+                        {% endif %}
+                        {% if settings.footer_link_3_enabled %}
+                            <span>&bull;</span>
+                            <a class="text-slate-500 hover:text-primary-600" href="{{ settings.footer_link_3_page starts with 'http' ? settings.footer_link_3_page : settings.footer_link_3_page|link }}">{{ settings.footer_link_3_title }}</a>
+                        {% endif %}
+                        {% if settings.footer_link_4_enabled %}
+                            <span>&bull;</span>
+                            <a class="text-slate-500 hover:text-primary-600" href="{{ settings.footer_link_4_page starts with 'http' ? settings.footer_link_4_page : settings.footer_link_4_page|link }}">{{ settings.footer_link_4_title }}</a>
+                        {% endif %}
+                    </div>
+                    {% if guest.extension_is_on({"mod":'branding'}) %}
+                        <div class="text-center">
+                            <span>{{ 'Powered by the'|trans }} </span>
+                            <a class="font-medium text-primary-600" href="https://fossbilling.org" title="Billing Software" target="_blank">{{ 'FOSSBilling Community'|trans }}</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </footer>
+        {% endif %}
     </div>
-    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1070;"></div>
+
+    <div class="toast-container fixed bottom-6 right-6 z-50"></div>
     {% if settings.footer_to_top_enabled %}
-        <a href="#top" class="position-fixed btn btn-primary bottom-0 end-0 m-3">
+        <a href="#top" class="fixed bottom-6 right-6 inline-flex items-center gap-2 rounded-full bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-lg hover:bg-primary-700">
             <span class="awe-arrow-up"></span> {{ 'Top'|trans }}</a>
     {% endif %}
-    <div class="wait" style="display:none" onclick="$(this).hide();">
-        <div class="spinner-border"
-             style="width: 4rem; height: 4rem; top: 50%; left: 50%; position: fixed; z-index: 999"></div>
+    <div class="wait" style="display:none" onclick="this.style.display='none';">
+        <div class="fixed inset-0 flex items-center justify-center bg-slate-900/60">
+            <div class="h-16 w-16 animate-spin rounded-full border-4 border-white/30 border-t-white"></div>
+        </div>
     </div>
     <noscript>{{ "NOTE: Many features on FOSSBilling require Javascript and cookies. You can enable both in your browser's preference settings."|trans }}</noscript>
-
-    {% endblock %}
+{% endblock %}
 
     {% if settings.inject_javascript %}
         {{ settings.inject_javascript | raw }}
@@ -271,7 +394,6 @@
     {% if guest.extension_is_on({ "mod": "cookieconsent" }) %}
         {{ include('mod_cookieconsent_index.html.twig', ignore_missing: true) }}
     {% endif %}
-</div>
-{{ DebugBar_render() }}
 </body>
+{{ DebugBar_render() }}
 </html>

@@ -11,6 +11,8 @@
 
 namespace Box\Mod\Support\Controller;
 
+use FOSSBilling\Routing\RouteGroup;
+
 class Client implements \FOSSBilling\InjectionAwareInterface
 {
     protected ?\Pimple\Container $di = null;
@@ -27,8 +29,12 @@ class Client implements \FOSSBilling\InjectionAwareInterface
 
     public function register(\Box_App &$app)
     {
-        $app->get('/support', 'get_tickets', [], static::class);
-        $app->get('/support/ticket/:id', 'get_ticket', [], static::class);
+        $dashboard = RouteGroup::dashboard($app);
+        $dashboard->get('/support', 'get_tickets', [], static::class);
+        $dashboard->get('/support/ticket/:id', 'get_ticket', ['id' => '[0-9]+'], static::class);
+
+        $app->get('/support', 'legacy_redirect_to_dashboard_support', [], static::class);
+        $app->get('/support/ticket/:id', 'legacy_redirect_to_dashboard_support_ticket', ['id' => '[0-9]+'], static::class);
         $app->get('/support/contact-us', 'get_contact_us', [], static::class);
         $app->get('/support/contact-us/conversation/:hash', 'get_contact_us_conversation', ['hash' => '[a-z0-9]+'], static::class);
 
@@ -43,15 +49,29 @@ class Client implements \FOSSBilling\InjectionAwareInterface
     {
         $this->di['is_client_logged'];
 
+        RouteGroup::ensureDashboardPath($app, 'support', $this->di['request']->getPathInfo());
+
         return $app->render('mod_support_tickets');
     }
 
     public function get_ticket(\Box_App $app, $id)
     {
+        RouteGroup::ensureDashboardPath($app, 'support/ticket/' . $id, $this->di['request']->getPathInfo());
+
         $api = $this->di['api_client'];
         $ticket = $api->support_ticket_get(['id' => $id]);
 
         return $app->render('mod_support_ticket', ['ticket' => $ticket]);
+    }
+
+    public function legacy_redirect_to_dashboard_support(\Box_App $app): never
+    {
+        $app->redirect(RouteGroup::path('support'));
+    }
+
+    public function legacy_redirect_to_dashboard_support_ticket(\Box_App $app, $id): never
+    {
+        $app->redirect(RouteGroup::path('support/ticket/' . $id));
     }
 
     public function get_contact_us(\Box_App $app)
